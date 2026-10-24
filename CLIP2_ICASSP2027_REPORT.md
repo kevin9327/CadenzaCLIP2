@@ -36,8 +36,10 @@ Listeners leverage linguistic context and word familiarity to reconstruct partia
 To prevent overfitting across hearing-loss conditions, we combine a calibrated psychoacoustic prior $\hat{y}_{\text{prior}}(\mathbf{x}) \in [0, 100]$ with a standardized $L_2$-regularized Ridge residual estimator:
 $$\hat{y}(\mathbf{x}) = \text{clip}_{[0, 100]}\!\left(\hat{y}_{\text{prior}}(\mathbf{x}) + \gamma \, \tilde{\mathbf{x}}^\top \mathbf{w}_{\text{Ridge}}\right), \quad \mathbf{w}_{\text{Ridge}} = \left(\tilde{\mathbf{X}}^\top \tilde{\mathbf{X}} + \alpha \mathbf{I}\right)^{-1} \tilde{\mathbf{X}}^\top \left(\mathbf{y} - \hat{\mathbf{y}}_{\text{prior}}\right)$$
 
-| System Variant | Modalities Used | LOO-CV RMSE (%) | Relative Gain vs. Mean Baseline |
-| :--- | :--- | :---: | :---: |
-| Constant Mean Baseline | None | `41.25%` | — |
-| Binaural Acoustic Only (`Audio1` + `Audio2` + `Severity`) | `Audio1`, `Audio2`, `Severity` | `31.84%` | `-22.8%` |
-| **Proposed Binaural STOI-Vocal + Lexical Solver** | **`Audio1`, `Audio2`, `Severity`, `Lyrics`** | **`24.26%`** | **`-41.2%`** |
+| System Variant | Modalities Used | Benchmark Split | RMSE (%) | PCC / Relative Gain |
+| :--- | :--- | :---: | :---: | :---: |
+| Constant Mean Baseline | None | Stereo Audio Benchmark | `41.25%` | — |
+| Binaural Acoustic Only (`Audio1` + `Audio2` + `Severity`) | `Audio1`, `Audio2`, `Severity` | Stereo Audio Benchmark | `31.84%` | `-22.8%` |
+| **Proposed Binaural STOI-Vocal + Lexical Solver** | **`Audio1`, `Audio2`, `Severity`, `Lyrics`** | **Stereo Audio Benchmark** | **`24.26%`** | **`-41.2%`** |
+| Severity-Only Empirical Prior (`T001b` Ablation) | `Severity` (`No Loss: 64.33%`, `Mild: 38.45%`, `Moderate: 30.41%`) | Full `N=20,297` 5-Fold Prompt-Grouped CV | `35.11%` | `PCC = 0.3596` |
+| **Full-Corpus Prompt-Grouped Ridge + Lexical-TFIDF (`T001`)** | **`Severity`, `Lyrics`, `Prompt Statistics`** | **Full `N=20,297` 5-Fold Prompt-Grouped CV (`2,117` Valid / `2,189` Eval)** | **`34.01%`** | **`PCC = 0.4242`** |
